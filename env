@@ -1,0 +1,11 @@
+# Environmental variables file sample
+HOST="192.168.1.1"
+PORT=22
+USERNAME="alarm"
+PASSWORD="alarm"
+ROOT_PASSWORD="root"
+HOST_LIST="192.168.1.1,192.168.1.2,192.168.3.159,192.168.4.163,192.168.1.5,192.168.1.6"
+NEW_USERNAME="raspi"
+NEW_PASSWORD="ipsar"
+SWARM_TOKEN="SWMTKN-1-xx-xx"
+SWARM_LEADER="ip:port"
