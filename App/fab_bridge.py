@@ -80,6 +80,14 @@ class Bridge():
             CLASS_LOG.critical("Unexpected exit probably expecting a responder")
         return self.result
 
+    def _session_helper(self):
+        try:
+            pass
+            self.connection.run
+        except Exception as e:
+            self.stderr = str(e)
+            CLASS_LOG.error(str(e))
+
     # command
     def _command(self, cmd, sudo=False, respond=False):
         if not self.connection:
@@ -93,6 +101,13 @@ class Bridge():
         else:
             self._command_helper(self.device.cmd_format(cmd), sudo, respond)
         self._result_parser()
+
+    # interactive session
+    def _interactive_session(self):
+        if not self.connection:
+            CLASS_LOG.critical("Must have an active fabric connection.")
+            return
+        self._session_helper()
 
     # Fabric execute
     def execute(self, cmd, sudo=False, respond=False):

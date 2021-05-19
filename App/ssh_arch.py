@@ -5,6 +5,11 @@ import paramiko
 from socket import timeout, gaierror
 from paramiko.channel import Channel
 from paramiko.ssh_exception import AuthenticationException, SSHException
+try:
+    import interactive
+except ImportError:
+    from App import interactive
+
 
 from Logger.logging_config import get_simple_logger
 CLASS_LOG = get_simple_logger("main")
@@ -30,6 +35,8 @@ class SSHArchDevice():
         try:
             self.ssh = paramiko.SSHClient()
             self.ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            CLASS_LOG.debug(
+                "Will connec to device using SSH: {} {} {} {}".format(self.username, self.password, self.port, self.host))
             self.ssh.connect(self.host, self. port, self.username, self.password)
             CLASS_LOG.debug("Connected to device using SSH")
         except (timeout, AuthenticationException, gaierror):
@@ -46,7 +53,6 @@ class SSHArchDevice():
             CLASS_LOG.debug("Closed SSH connection")
         except:
             CLASS_LOG.warning("Could not close ssh connection: {}".format(self.host))
-
     def _connect_channel(self):
         if not self.ssh:
             CLASS_LOG.warning("Create ssh connection first: {}".format(self.host))
@@ -174,6 +180,13 @@ class SSHArchDevice():
         CLASS_LOG.info("SSH Response:\n{}".format(response))
         self.unbind()
         return response
+
+    def get_shell(self):
+        self.bind()
+        CLASS_LOG.info("Opening interactive shell")
+        interactive.interactive_shell(self.channel)
+        self.unbind()
+        CLASS_LOG.info("Closed interactive shell")
 
     # Low level instructions to be able to use instead of Fabric
     def _set_pacman(self):
